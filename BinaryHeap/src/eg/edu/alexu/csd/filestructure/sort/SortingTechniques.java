@@ -7,7 +7,13 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 	private ArrayList<T> temp = new ArrayList<T>();
 
 	public IHeap<T> heapSort(ArrayList<T> unordered) {
-		return null;
+		IHeap<T> sorted = new Heap<T>();
+		sorted.build(unordered);
+		for(int i = 0; i < unordered.size(); i++) {
+			sorted.extract();
+//			sorted.heapify(sorted.getRoot());
+		}
+		return sorted;
 	}
 
 	public void sortSlow(ArrayList<T> unordered) {
@@ -15,7 +21,7 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 		for (int i = 0; (i < unordered.size()) && swapped; i++) {
 			swapped = false;
 			for (int j = 0; j < unordered.size()-1-i; j++) {
-				if(unordered.get(j).compareTo(unordered.get(j+1)) > 1) {
+				if(unordered.get(j).compareTo(unordered.get(j+1)) > 0) {
 					swap(unordered, j);
 					swapped = true;
 				}
@@ -24,7 +30,7 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 	}
 
 	public void sortFast(ArrayList<T> unordered) {
-		mergeSort(unordered, 0, unordered.size());
+		mergeSort(unordered, 0, unordered.size()-1);
 	}
 	
 	private void mergeSort(ArrayList<T> list, int first, int last) {
@@ -41,7 +47,7 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 		int first1 = first;
 		int first2 = mid + 1;
 		while ((first1 <= mid) && (first2 <= last)) {
-			if (list.get(first1).compareTo(list.get(first2)) < 1) {
+			if (list.get(first1).compareTo(list.get(first2)) < 0) {
 				temp.add(list.get(first1++));
 			} else {
 				temp.add(list.get(first2++));

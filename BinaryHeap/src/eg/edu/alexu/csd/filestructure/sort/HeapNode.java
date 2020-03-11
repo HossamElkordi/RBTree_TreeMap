@@ -14,15 +14,28 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 	}
 
 	public INode<T> getLeftChild() {
-		return (((2 * index) + 1) < heap.size()) ? heap.get((2 * index) + 1) : null;
+		try {
+			return (((2 * index) + 1) < heap.size()) ? heap.get((2 * index) + 1) : null;
+		}catch(Exception e) {
+			return null;
+		}
 	}
 
 	public INode<T> getRightChild() {
-		return (((2 * index) + 2) < heap.size()) ? heap.get((2 * index) + 2) : null;
+		try {
+			return (((2 * index) + 2) < heap.size()) ? heap.get((2 * index) + 2) : null;
+		}catch(Exception e) {
+			return null;
+		}
 	}
 
 	public INode<T> getParent() {
-		return ((index / 2) >= 0) ? heap.get(index / 2) : null;
+		try {
+			if(index == 0) return null;
+			return ((index / 2) >= 0) ? heap.get(index / 2) : null;
+		}catch(Exception e) {
+			return null;
+		}
 	}
 
 	public T getValue() {
