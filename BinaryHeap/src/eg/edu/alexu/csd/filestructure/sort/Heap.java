@@ -57,16 +57,22 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		node.setValue(element);
 		this.heap.add(lastindex,node);
 		lastindex++;
-		int i= (int) Math.floor((lastindex-1)/2);
+		heapifyBottomUp();
+	}
+
+	private void heapifyBottomUp(){
+		int i= (int) Math.floor((lastindex-2)/2);
 		while(i>=0){
 			heapify(heap.get(i));
 			if(i==0)break;
 			i=(int)Math.floor((i-1)/2);
 		}
 	}
-
 	public void build(Collection<T> unordered) {
-		
+		heap=new ArrayList<INode<T>>((Collection<? extends INode<T>>) unordered);
+		lastindex=heap.size();
+		heapifyBottomUp();
+
 	}
 
 }
