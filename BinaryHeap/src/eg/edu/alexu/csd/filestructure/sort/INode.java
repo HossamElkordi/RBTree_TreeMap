@@ -23,5 +23,6 @@ public interface INode<T extends Comparable<T>> {
 	*/
 	T getValue();
 	void setValue(T value);
+	int getIndex();
 	
 }

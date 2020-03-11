@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class HeapNode<T extends Comparable<T>> implements INode<T> {
 
 	private ArrayList<INode<T>> heap;
-	private int index;
+	public int index;
 	private T value;
 	
 	public HeapNode(ArrayList<INode<T>> heap, int index) {
@@ -32,5 +32,6 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 	public void setValue(T value) {
 		this.value = value;
 	}
+	public int getIndex(){return index;}
 
 }
