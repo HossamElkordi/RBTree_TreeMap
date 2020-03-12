@@ -17,7 +17,7 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 
 	public INode<T> getLeftChild() {
 		try {
-			return (((2 * index) + 1) < heap.size()) ? heap.get((2 * index) + 1) : null;
+			return (((2 * index) + 1) < heapContainer.size()) ? heap.get((2 * index) + 1) : null;
 		}catch(Exception e) {
 			return null;
 		}
@@ -25,7 +25,7 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 
 	public INode<T> getRightChild() {
 		try {
-			return (((2 * index) + 2) < heap.size()) ? heap.get((2 * index) + 2) : null;
+			return (((2 * index) + 2) < heapContainer.size()) ? heap.get((2 * index) + 2) : null;
 		}catch(Exception e) {
 			return null;
 		}
