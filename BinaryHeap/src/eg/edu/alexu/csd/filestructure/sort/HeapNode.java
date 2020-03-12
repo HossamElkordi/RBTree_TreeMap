@@ -34,7 +34,7 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 	public INode<T> getParent() {
 		try {
 			if(index == 0) return null;
-			return ((index / 2) >= 0) ? heap.get(index / 2) : null;
+			return (((index-1) / 2) >= 0) ? heap.get((index-1) / 2) : null;
 		}catch(Exception e) {
 			return null;
 		}

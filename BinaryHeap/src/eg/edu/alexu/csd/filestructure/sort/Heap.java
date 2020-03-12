@@ -13,7 +13,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	}
 
 	public INode<T> getRoot() {
-		if(heap.isEmpty()) return null;
+		if(heap.isEmpty() || lastindex == 0) return null;
 		else{return heap.get(0);}
 	}
 
@@ -46,48 +46,35 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		INode<T> left    = node.getLeftChild();
 		INode<T> right   = node.getRightChild();
 		
-		if((left != null)) {
-			if(left.getValue().compareTo(biggest.getValue()) > 0) {
-				biggest = left;
-			}
-		}
 		if((right != null)) {
 			if(right.getValue().compareTo(biggest.getValue()) > 0) {
 				biggest = right;
 			}
 		}
+		if((left != null)) {
+			if(left.getValue().compareTo(biggest.getValue()) > 0) {
+				biggest = left;
+			}
+		}
+		
 		if(biggest != node) {
-			T temp = node.getValue();
-			node.setValue(biggest.getValue());
-			biggest.setValue(temp);
+			swap(node, biggest);
 			heapify(biggest);
 		}
 	}
 	
 	public T extract() {
 		if(heap.isEmpty()||lastindex==0){return null;}
-//		if(lastindex == 1) {
-//			lastindex--;
-//			return heap.get(0).getValue();
-//		}
 		T temp = this.getRoot().getValue();
-		this.getRoot().setValue(heap.get(lastindex-1).getValue());
-		heap.get(lastindex-1).setValue(temp);
 		lastindex--;
+		if(lastindex == 0) {
+			return temp;
+		}
+		this.getRoot().setValue(heap.get(lastindex).getValue());
+		heap.get(lastindex).setValue(temp);
 		heapify(this.getRoot());
 		return temp;
 	}
-
-//	public T extract() {
-//		if(heap.isEmpty()||lastindex==0){return null;}
-//		T lastValue=heap.get(lastindex-1).getValue();
-//		T Value=heap.get(0).getValue();
-//		heap.get(0).setValue(lastValue);
-//		heap.get(lastindex-1).setValue(Value);
-//		lastindex--;
-//		if(lastindex!=0)heapify(heap.get(0));
-//		return Value;
-//	}
 
 	public void insert(T element) {
 		if(element==null) return;
@@ -96,25 +83,17 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		node.setValue(element);
 		this.heap.add(lastindex,node);
 		lastindex++;
-		heapifyBottomUp();
-//		for(int i = 0; i < lastindex; i++) {
-//			System.out.print(heap.get(i).getValue() + ", ");
-//		}
-//		System.out.println();
+		heapifyBottomUp(node);;
 	}
 
-	private void heapifyBottomUp(){
-		INode<T> parent = heap.get(lastindex-1).getParent();
-		while(parent != null) {
-			heapify(parent);
-			parent = parent.getParent();
+	private void heapifyBottomUp(INode<T> lastNode){
+		INode<T> parent = lastNode.getParent();
+		if(parent != null) {
+			if(lastNode.getValue().compareTo(parent.getValue()) > 0) {
+				swap(lastNode, parent);				
+				heapifyBottomUp(parent);
+			}
 		}
-//		int i= (int) Math.floor((lastindex-2)/2);
-//		while(i>=0){
-//			heapify(heap.get(i));
-//			if(i==0)break;
-//			i=(int)Math.floor((i-1)/2);
-//		}
 	}
 
 	public void build(Collection<T> unordered) {if(unordered==null)return;
@@ -127,6 +106,12 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		for(int i = ((heap.size() / 2) - 1); i >= 0; i--) {
 			heapify(heap.get(i));
 		}
+	}
+	
+	private void swap(INode<T> first, INode<T> second) {
+		T temp = first.getValue();
+		first.setValue(second.getValue());
+		second.setValue(temp);
 	}
 
 }

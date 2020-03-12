@@ -12,7 +12,7 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 		for(int i = 0; i < unordered.size(); i++) {
 			sorted.extract();
 		}
-		((Heap)(sorted)).lastindex=((Heap)(sorted)).heap.size();
+		((Heap<T>)(sorted)).lastindex=((Heap<T>)(sorted)).heap.size();
 		return sorted;
 	}
 
