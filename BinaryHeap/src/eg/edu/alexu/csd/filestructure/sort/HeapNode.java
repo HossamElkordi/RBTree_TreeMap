@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class HeapNode<T extends Comparable<T>> implements INode<T> {
 
 	private Heap<T> heapContainer;
-	ArrayList<INode<T>> heap;
+	private ArrayList<INode<T>> heap;
 	public int index;
 	private T value;
 	
-	public HeapNode(Heap<T> heap, int index) {
+	public HeapNode(Heap<T> heap, ArrayList<INode<T>> list) {
 		this.heapContainer = heap;
-		this.heap=(heapContainer).heap;
-		this.index = index;
+		this.heap=list;
+		index = heap.size();
 	}
 
 	public INode<T> getLeftChild() {

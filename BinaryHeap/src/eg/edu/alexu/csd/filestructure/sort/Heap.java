@@ -6,11 +6,11 @@ import java.util.Iterator;
 
 public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	private int lastindex=0;
+	private ArrayList<INode<T>> heap;
+	
 	public Heap() {
 		this.heap = new ArrayList<INode<T>>();
 	}
-	
-	public ArrayList<INode<T>> heap;
 
 	public INode<T> getRoot() {
 		if(heap.isEmpty()) return null;
@@ -89,7 +89,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 //	}
 
 	public void insert(T element) {
-		HeapNode<T> node=new HeapNode<T>(this,lastindex);
+		HeapNode<T> node=new HeapNode<T>(this,heap);
 
 		node.setValue(element);
 		this.heap.add(lastindex,node);
@@ -118,7 +118,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 	public void build(Collection<T> unordered) {
 		Iterator<T> iter = unordered.iterator();
 		while(iter.hasNext()) {
-			INode<T> node = new HeapNode<T>(this, lastindex);
+			INode<T> node = new HeapNode<T>(this, heap);
 			node.setValue(iter.next());
 			heap.add(lastindex++, node);
 		}
