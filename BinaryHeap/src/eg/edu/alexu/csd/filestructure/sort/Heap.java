@@ -89,6 +89,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 //	}
 
 	public void insert(T element) {
+		if(element.equals(null)) return;
 		HeapNode<T> node=new HeapNode<T>(this,heap);
 
 		node.setValue(element);

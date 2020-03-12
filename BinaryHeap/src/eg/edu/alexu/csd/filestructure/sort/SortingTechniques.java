@@ -11,7 +11,6 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 		sorted.build(unordered);
 		for(int i = 0; i < unordered.size(); i++) {
 			sorted.extract();
-//			sorted.heapify(sorted.getRoot());
 		}
 		return sorted;
 	}
