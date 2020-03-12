@@ -6,16 +6,17 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 	
 	private ArrayList<T> temp = new ArrayList<T>();
 
-	public IHeap<T> heapSort(ArrayList<T> unordered) {
+	public IHeap<T> heapSort(ArrayList<T> unordered) {if(unordered==null){return new Heap<T>();}
 		IHeap<T> sorted = new Heap<T>();
 		sorted.build(unordered);
 		for(int i = 0; i < unordered.size(); i++) {
 			sorted.extract();
 		}
+		((Heap)(sorted)).lastindex=((Heap)(sorted)).heap.size();
 		return sorted;
 	}
 
-	public void sortSlow(ArrayList<T> unordered) {
+	public void sortSlow(ArrayList<T> unordered) {if(unordered==null){return ;}
 		boolean swapped = true;
 		for (int i = 0; (i < unordered.size()) && swapped; i++) {
 			swapped = false;
@@ -28,7 +29,7 @@ public class SortingTechniques<T extends Comparable<T>> implements ISort<T> {
 		}
 	}
 
-	public void sortFast(ArrayList<T> unordered) {
+	public void sortFast(ArrayList<T> unordered) {if(unordered==null){return ;}
 		mergeSort(unordered, 0, unordered.size()-1);
 	}
 	
