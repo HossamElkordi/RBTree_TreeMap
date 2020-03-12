@@ -4,18 +4,20 @@ import java.util.ArrayList;
 
 public class HeapNode<T extends Comparable<T>> implements INode<T> {
 
-	private ArrayList<INode<T>> heap;
+	private Heap<T> heapContainer;
+	ArrayList<INode<T>> heap;
 	public int index;
 	private T value;
 	
-	public HeapNode(ArrayList<INode<T>> heap, int index) {
-		this.heap = heap;
+	public HeapNode(Heap<T> heap, int index) {
+		this.heapContainer = heap;
+		this.heap=(heapContainer).heap;
 		this.index = index;
 	}
 
 	public INode<T> getLeftChild() {
 		try {
-			return (((2 * index) + 1) < heap.size()) ? heap.get((2 * index) + 1) : null;
+			return (((2 * index) + 1) < heapContainer.size()) ? heap.get((2 * index) + 1) : null;
 		}catch(Exception e) {
 			return null;
 		}
@@ -23,7 +25,7 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 
 	public INode<T> getRightChild() {
 		try {
-			return (((2 * index) + 2) < heap.size()) ? heap.get((2 * index) + 2) : null;
+			return (((2 * index) + 2) < heapContainer.size()) ? heap.get((2 * index) + 2) : null;
 		}catch(Exception e) {
 			return null;
 		}
