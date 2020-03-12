@@ -45,12 +45,12 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 		INode<T> left    = node.getLeftChild();
 		INode<T> right   = node.getRightChild();
 		
-		if((left != null) && (left.getIndex() < lastindex)) {
+		if((left != null)) {
 			if(left.getValue().compareTo(biggest.getValue()) > 0) {
 				biggest = left;
 			}
 		}
-		if((right != null) && (right.getIndex() < lastindex)) {
+		if((right != null)) {
 			if(right.getValue().compareTo(biggest.getValue()) > 0) {
 				biggest = right;
 			}

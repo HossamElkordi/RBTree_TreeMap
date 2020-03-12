@@ -45,6 +45,5 @@ public class HeapNode<T extends Comparable<T>> implements INode<T> {
 	public void setValue(T value) {
 		this.value = value;
 	}
-	public int getIndex(){return index;}
 
 }
