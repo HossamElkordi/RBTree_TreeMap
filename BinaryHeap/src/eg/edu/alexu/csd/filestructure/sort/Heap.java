@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public class Heap<T extends Comparable<T>> implements IHeap<T> {
-	private int lastindex=0;
-	private ArrayList<INode<T>> heap;
+	public int lastindex=0;
+	public ArrayList<INode<T>> heap;
 	
 	public Heap() {
 		this.heap = new ArrayList<INode<T>>();
@@ -41,6 +41,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 //	}
 	
 	public void heapify(INode<T> node) {
+		if(node==null){return;}
 		INode<T> biggest = node;
 		INode<T> left    = node.getLeftChild();
 		INode<T> right   = node.getRightChild();
@@ -89,7 +90,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 //	}
 
 	public void insert(T element) {
-		if(element.equals(null)) return;
+		if(element==null) return;
 		HeapNode<T> node=new HeapNode<T>(this,heap);
 
 		node.setValue(element);
@@ -116,7 +117,7 @@ public class Heap<T extends Comparable<T>> implements IHeap<T> {
 //		}
 	}
 
-	public void build(Collection<T> unordered) {
+	public void build(Collection<T> unordered) {if(unordered==null)return;
 		Iterator<T> iter = unordered.iterator();
 		while(iter.hasNext()) {
 			INode<T> node = new HeapNode<T>(this, heap);

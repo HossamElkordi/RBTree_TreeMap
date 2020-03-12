@@ -1,28 +1,28 @@
 package eg.edu.alexu.csd.filestructure.sort;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class MainTest {
 
 	public static void main(String[] args) {
-//		IHeap<Integer> heap = new Heap<Integer>();
-		ArrayList<Integer> data = new ArrayList<Integer>();
-		data.add(5);
-		data.add(8);
-		data.add(2);
-		data.add(1);
-		data.add(9);
-		data.add(6);
-		ISort<Integer> sorting = new SortingTechniques<Integer>();
-		IHeap<Integer> heap = sorting.heapSort(data);
-//		heap.insert(5);
-//		heap.insert(8);
-//		heap.insert(2);
-//		heap.insert(1);
-//		heap.insert(9);
-//		heap.insert(6);
-//		for(int i = 0; i < 6; i++)
-//			System.out.println(heap.extract());
+		IHeap heap = new Heap();
+		Integer max = -2147483648;
+		Integer secondMax = -2147483648;
+
+		for(int i = 0; i < 10000; ++i) {
+			Random r = new Random();
+			int val = r.nextInt(2147483647);
+			heap.insert(val);
+			if (val > max) {
+				secondMax = max;
+				max = val;
+			} else if (val >= secondMax) {
+				secondMax = val;
+			}
+		}
+		int ext1=(Integer) heap.extract();
+		int ext2=(Integer) heap.extract();
+		int i=0;
 	}
 
 }
