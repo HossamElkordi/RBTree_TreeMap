@@ -7,12 +7,16 @@ public class MainTest {
 	public static void main(String[] args) {
 //		IHeap<Integer> heap = new Heap<Integer>();
 		ArrayList<Integer> data = new ArrayList<Integer>();
-		data.add(5);
+		data.add(19);
+		data.add(11);
+		data.add(0);
+		data.add(11);
 		data.add(8);
-		data.add(2);
-		data.add(1);
-		data.add(9);
-		data.add(6);
+		data.add(12);
+		data.add(10);
+		data.add(10);
+		data.add(18);
+		data.add(19);
 		ISort<Integer> sorting = new SortingTechniques<Integer>();
 		IHeap<Integer> heap = sorting.heapSort(data);
 //		heap.insert(5);
