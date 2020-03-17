@@ -238,7 +238,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		if(node==root){
 			INode<T, V> left=node.getLeftChild();
 			root=left;
-			INode rightright=left.getRightChild();
+			INode<T, V> rightright=left.getRightChild();
 			root.setRightChild(node);
 			node.setLeftChild(rightright);
 			node.setParent(root);
