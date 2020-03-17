@@ -68,7 +68,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		INode<T, V> uncle=getUncle(node);
 		INode<T, V> father=node.getParent();
 		INode<T, V> grandfather=father.getParent();
-		if(uncle.getColor() == INode.RED){
+		if(uncle.getColor()==INode.RED){
 			if(grandfather == root) {
 				return;
 			}
@@ -167,5 +167,5 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}
 		return null;
 	}
-
+//new
 }
