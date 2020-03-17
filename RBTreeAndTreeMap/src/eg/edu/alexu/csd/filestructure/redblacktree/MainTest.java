@@ -9,6 +9,8 @@ public class MainTest {
 		rbTree.insert(3, 3);
 		rbTree.insert(2, 2);
 		rbTree.insert(1, 1);
+		rbTree.insert(6,6);
+		rbTree.insert(15,15);
 		inOrderTraversal(rbTree.getRoot());
 	}
 

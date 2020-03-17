@@ -80,7 +80,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}
 		else{
 			if(father.getRightChild()==node){leftRotate(father);
-				fixUpInsert(node);
+				fixUpInsert(father);
 				return;
 			}
 			else{
