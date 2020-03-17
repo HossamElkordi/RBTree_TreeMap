@@ -18,12 +18,18 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	public V search(T key) {
-		INode<T, V> searchRes = recurSearch(this.root, key);
-		return (searchRes == null) ? null : searchRes.getValue();
+		if(root != null) {
+			INode<T, V> searchRes = recurSearch(this.root, key);
+			return (searchRes == null) ? null : searchRes.getValue();
+		}
+		return null;
 	}
 
 	public boolean contains(T key) {
-		return (recurSearch(this.root, key) == null) ? false : true;
+		if(root != null) {
+			return (recurSearch(this.root, key) == null) ? false : true;
+		}
+		return false;
 	}
 
 	public void insert(T key, V value) {
