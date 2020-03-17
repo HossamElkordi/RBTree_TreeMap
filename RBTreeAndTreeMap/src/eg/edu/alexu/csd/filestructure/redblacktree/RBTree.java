@@ -108,8 +108,8 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			node.setRightChild(recurDelete(node.getRightChild(), key));
 		}else {
 			if(node.getLeftChild().isNull() && node.getRightChild().isNull()) {
-				node = leaf;
 				fixUpDelete(node, leaf);
+				node = leaf;
 			}else if(node.getLeftChild().isNull()) {
 				INode<T, V> right = node.getRightChild();
 				copyNode(right, node);
