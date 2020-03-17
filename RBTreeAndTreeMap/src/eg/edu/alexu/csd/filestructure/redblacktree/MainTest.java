@@ -16,6 +16,6 @@ public class MainTest {
 		if(root.isNull()) return;
 		inOrderTraversal(root.getLeftChild());
 		System.out.println("(" + root.getKey() + ", " + root.getValue() + "): " + ((root.getColor() == INode.RED) ? "RED" : "BLACK"));
-		inOrderTraversal(root.getLeftChild());
+		inOrderTraversal(root.getRightChild());
 	}
 }
