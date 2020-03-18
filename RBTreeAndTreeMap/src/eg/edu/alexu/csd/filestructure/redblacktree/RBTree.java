@@ -42,7 +42,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		return false;
 	}
 
-	/*public void insert(T key, V value) {
+	public void insert(T key, V value) {
 		if((key == null) || (value == null)) {
 			throw new RuntimeErrorException(null);
 		}
@@ -137,7 +137,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			}
 
 		}
-	}*/
+	}
 	private void leftRotate(INode<T, V> node) {
 		INode<T, V> right = node.getRightChild();
 		node.setRightChild(right.getLeftChild());
@@ -158,20 +158,20 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		right.setLeftChild(node);
 		node.setParent(right);
 	}
-	/*private void rightRotate(INode<T,V> node){
+	private void rightRotate(INode<T,V> node){
+		INode<T, V> left=node.getLeftChild();
+		if(left==null||(left.isNull()))return;
 		if(node==root){
-			INode<T, V> left=node.getLeftChild();
 			root=left;
 			INode<T, V> rightright=left.getRightChild();
 			root.setRightChild(node);
 			node.setLeftChild(rightright);
+			if(!rightright.isNull()){rightright.setParent(node);}
 			node.setParent(root);
 			root.setParent(null);
 			return;
 		}
-		INode<T, V> left=node.getLeftChild();
 		INode<T, V> parent=node.getParent();
-		if(left.isNull())return;
 		if(parent!=null) {
 			if (parent.getRightChild() == node) {
 				parent.setRightChild(left);
@@ -182,13 +182,13 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		left.setParent(node.getParent());
 		node.setParent(left);
 		node.setLeftChild(left.getRightChild());
+		if(!node.getLeftChild().isNull()){node.getLeftChild().setParent(node);}
 		left.setRightChild(node);
 
 	}
 
 
-	*/
-	public void insert(T key, V value) {
+	/*public void insert(T key, V value) {
 		System.out.println("#0");
 		if((key == null) || (value == null)) {
 			throw new RuntimeErrorException(null);
@@ -285,7 +285,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}
 		root.setColor(INode.BLACK);
 		System.out.println("$10");
-	}
+	}*/
 
 //	void leftRotate(INode node) {System.out.println("@0");
 //		if (node.getParent() != null) {System.out.println("@1");
@@ -314,7 +314,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 //		}
 //	}
 
-	void rightRotate(INode node) {System.out.println("@8");
+	/*void rightRotate(INode node) {System.out.println("@8");
 		if (node.getParent() != null) {System.out.println("@9");
 			if (node == node.getParent().getLeftChild()) {System.out.println("@10");
 				node.getParent().setLeftChild(node.getLeftChild());
@@ -340,7 +340,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			left.setParent(null);
 			root = left;
 		}
-	}
+	}*/
 
 	public boolean delete(T key) {
 		if(key == null) {

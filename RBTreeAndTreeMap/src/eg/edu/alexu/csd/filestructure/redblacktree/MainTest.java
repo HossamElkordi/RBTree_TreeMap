@@ -14,9 +14,9 @@ public class MainTest {
 
 		int i;
 		int key;
-		for(i = 0; i < 10000; ++i) {
+		for(i = 0; i < 100000; ++i) {
 			System.out.println(i);
-			key = r.nextInt(100);
+			key = r.nextInt(10000);
 			redBlackTree.insert(key, "soso" + key);
 			list.add(key);
 		}
