@@ -1,5 +1,7 @@
 package eg.edu.alexu.csd.filestructure.redblacktree;
 
+import javax.management.RuntimeErrorException;
+
 public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 
 	private INode<T, V> root;
@@ -10,15 +12,20 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	public boolean isEmpty() {
-		return (this.root == leaf);
+		return ((root == null) || (this.root == leaf));
 	}
 
 	public void clear() {
-
+		if(root != null) {
+			recurClr(root);
+		}
 	}
 
 	public V search(T key) {
-		if(root != null) {
+		if(key == null) {
+			throw new RuntimeErrorException(null);
+		}
+		if(!isEmpty()) {
 			INode<T, V> searchRes = recurSearch(this.root, key);
 			return (searchRes == null) ? null : searchRes.getValue();
 		}
@@ -26,13 +33,19 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	public boolean contains(T key) {
-		if(root != null) {
+		if(key == null) {
+			throw new RuntimeErrorException(null);
+		}
+		if(!isEmpty()) {
 			return (recurSearch(this.root, key) == null) ? false : true;
 		}
 		return false;
 	}
 
 	public void insert(T key, V value) {
+		if((key == null) || (value == null)) {
+			throw new RuntimeErrorException(null);
+		}
 		//creating the node
 		INode<T, V> node=new RBNode<T, V>(false);
 		node.setKey(key);
@@ -68,7 +81,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		if(temp.getColor()==INode.BLACK){return;}
 		fixUpInsert(node);
 	}
-	private void swapColor(INode one,INode two){
+	private void swapColor(INode<T, V> one,INode<T, V> two){
 		boolean temp;
 		temp=one.getColor();
 		one.setColor(two.getColor());
@@ -77,10 +90,10 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 
 	private void fixUpInsert(INode<T,V>node){
 		if(node==root){node.setColor(INode.BLACK);return;}
-		INode father=node.getParent();
+		INode<T, V> father=node.getParent();
 		if(father.getColor()==INode.BLACK){return;}
-		INode grandfather=father.getParent();
-		INode uncle=getUncle(node);
+		INode<T, V> grandfather=father.getParent();
+		INode<T, V> uncle=getUncle(node);
 		boolean level0left,level1left;
 		if(uncle.getColor()==INode.RED){
 			uncle.setColor(INode.BLACK);
@@ -117,6 +130,9 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	public boolean delete(T key) {
+		if(key == null) {
+			throw new RuntimeErrorException(null);
+		}
 		INode<T, V> deleted = recurDelete(root, key);
 		if(deleted == null) {
 			return false;
@@ -149,11 +165,12 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 				deleteNode(left);
 				return node;
 			}
-			
-			INode<T, V> successor = getSuccessor(node.getRightChild());
-			node.setKey(successor.getKey());
-			node.setValue(successor.getValue());
-			recurDelete(node.getRightChild(), successor.getKey());
+			if(node != leaf) {
+				INode<T, V> successor = getSuccessor(node.getRightChild());
+				node.setKey(successor.getKey());
+				node.setValue(successor.getValue());
+				recurDelete(node.getRightChild(), successor.getKey());
+			}
 		}
 		return node;
 	}
@@ -167,7 +184,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			sibling = getSibling(deleted);
 			if(sibling.getColor() == INode.RED) {
 				sibling.setColor(INode.BLACK);
-				deleted.setColor(INode.RED);
+				deleted.getParent().setColor(INode.RED);
 				if(deleted.getParent().getLeftChild() == deleted) {
 					leftRotate(deleted.getParent());
 				}else {
@@ -237,6 +254,13 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			recurSearch(root.getRightChild(), key);
 		}
 		return null;
+	}
+	
+	private void recurClr(INode<T, V> node) {
+		if(node.isNull()) return;
+		recurClr(node.getLeftChild());
+		recurClr(node.getRightChild());
+		deleteNode(node);
 	}
 
 	private void leftRotate(INode<T, V> node) {
