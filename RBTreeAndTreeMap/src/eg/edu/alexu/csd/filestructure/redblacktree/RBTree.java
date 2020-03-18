@@ -19,6 +19,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		if(root != null) {
 			recurClr(root);
 		}
+		root = null;
 	}
 
 	public V search(T key) {
@@ -27,7 +28,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}
 		if(!isEmpty()) {
 			INode<T, V> searchRes = recurSearch(this.root, key);
-			return (searchRes == null) ? null : searchRes.getValue();
+			return ((searchRes == null) || searchRes.isNull()) ? null : searchRes.getValue();
 		}
 		return null;
 	}
@@ -37,7 +38,8 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			throw new RuntimeErrorException(null);
 		}
 		if(!isEmpty()) {
-			return (recurSearch(this.root, key) == null) ? false : true;
+			INode<T, V> searchRes = recurSearch(this.root, key);
+			return ((searchRes == null) || searchRes.isNull()) ? false : true;
 		}
 		return false;
 	}
@@ -347,7 +349,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			throw new RuntimeErrorException(null);
 		}
 		INode<T, V> deleted = recurDelete(root, key);
-		if(deleted == null) {
+		if((deleted == null) || deleted.isNull()) {
 			return false;
 		}
 		return true;
@@ -365,17 +367,17 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			if(node.getLeftChild().isNull() && node.getRightChild().isNull()) {
 				fixUpDelete(node, leaf);
 				node = leaf;
-			}else if(node.getLeftChild().isNull()) {
-				INode<T, V> right = node.getRightChild();
-				copyNode(right, node);
-				fixUpDelete(node,right);
-				deleteNode(right);
-				return node;
-			}else if(node.getRightChild().isNull()) {
-				INode<T, V> left = node.getRightChild();
-				copyNode(left, node);
-				fixUpDelete(node,left);
-				deleteNode(left);
+			}else { 
+				INode<T, V> child = null;
+				if(node.getLeftChild().isNull()) {
+					child = node.getRightChild();
+				}else if(node.getRightChild().isNull()) {
+					child = node.getRightChild();
+				}
+				copyNode(child, node);
+				fixUpDelete(node,child);
+				deleteNode(child);
+				child = null;
 				return node;
 			}
 			if(node != leaf) {
@@ -453,20 +455,18 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		node.setLeftChild(null);
 		node.setRightChild(null);
 		node.setParent(null);
-		node = null;
 	}
 
 	private INode<T, V> recurSearch(INode<T, V> root, T key) {
-		if (root.isNull() || (root.getKey() == key)) {
+		if (root.isNull() || (root.getKey().equals(key))) {
 			return root;
 		}
 
 		if (key.compareTo(root.getKey()) < 0) {
-			recurSearch(root.getLeftChild(), key);
+			return recurSearch(root.getLeftChild(), key);
 		} else {
-			recurSearch(root.getRightChild(), key);
+			return recurSearch(root.getRightChild(), key);
 		}
-		return null;
 	}
 	
 	private void recurClr(INode<T, V> node) {
@@ -474,6 +474,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		recurClr(node.getLeftChild());
 		recurClr(node.getRightChild());
 		deleteNode(node);
+		node = null;
 	}
 
 
