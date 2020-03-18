@@ -68,32 +68,51 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		if(temp.getColor()==INode.BLACK){return;}
 		fixUpInsert(node);
 	}
+	private void swapColor(INode one,INode two){
+		boolean temp;
+		temp=one.getColor();
+		one.setColor(two.getColor());
+		two.setColor(temp);
+	}
 
 	private void fixUpInsert(INode<T,V>node){
-		if(node.getColor()==INode.BLACK){return;}
-		if(node.getParent().getColor()== INode.BLACK){return;}
-		INode<T, V> uncle=getUncle(node);
-		INode<T, V> father=node.getParent();
-		INode<T, V> grandfather=father.getParent();
+		if(node==root){node.setColor(INode.BLACK);return;}
+		INode father=node.getParent();
+		if(father.getColor()==INode.BLACK){return;}
+		INode grandfather=father.getParent();
+		INode uncle=getUncle(node);
+		boolean level0left,level1left;
 		if(uncle.getColor()==INode.RED){
-			if(grandfather!=root){
-				grandfather.setColor(INode.RED);
-			}
-			father.setColor(INode.BLACK);
 			uncle.setColor(INode.BLACK);
+			father.setColor(INode.BLACK);
+			grandfather.setColor(INode.RED);
 			fixUpInsert(grandfather);
 			return;
 		}
 		else{
-			if(father.getRightChild()==node){leftRotate(father);
+			level0left=(grandfather.getLeftChild()==father);
+			level1left=(father.getLeftChild()==node);
+			if(level0left&&level1left){
+				rightRotate(grandfather);
+				swapColor(grandfather,father);
+				return;
+			}
+			else if(level0left&&!level1left){
+				leftRotate(father);
 				fixUpInsert(father);
 				return;
 			}
-			else{
-				grandfather.setColor(INode.RED);
-				father.setColor(INode.BLACK);
-				rightRotate(grandfather);
+			else if(!level1left){
+				leftRotate(grandfather);
+				swapColor(grandfather,father);
+				return;
 			}
+			else{
+				rightRotate(father);
+				fixUpInsert(father);
+				return;
+			}
+
 		}
 	}
 
