@@ -218,7 +218,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 						temp.setLeftChild(node);
 						node.setParent(temp);
 						break;
-					} else {System.out.println("*6");
+					} else {System.out.println("*6: node: " + node.getKey() + " temp: " + temp.getKey());
 						temp = temp.getLeftChild();
 					}
 				} else if (temp.getKey().compareTo(node.getKey())<=0) {System.out.println("*7");
@@ -226,7 +226,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 						temp.setRightChild(node);
 						node.setParent(temp);
 						break;
-					} else {System.out.println("*9");
+					} else {System.out.println("*9: node: " + node.getKey() + " temp: " + temp.getKey());
 						temp = temp.getRightChild();
 					}
 				}
