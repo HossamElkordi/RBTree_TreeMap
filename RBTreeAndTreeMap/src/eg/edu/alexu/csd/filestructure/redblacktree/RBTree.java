@@ -42,7 +42,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		return false;
 	}
 
-	public void insert(T key, V value) {
+	/*public void insert(T key, V value) {
 		if((key == null) || (value == null)) {
 			throw new RuntimeErrorException(null);
 		}
@@ -63,7 +63,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			int comp=temp.getKey().compareTo(key);
 			if (comp == 0) {
 				temp.setValue(value);
-				break;
+				return;
 			} else if(comp<0) {//temp<key
 				if(temp.getRightChild().isNull()){break;}
 				else{temp=temp.getRightChild();}
@@ -88,7 +88,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		two.setColor(temp);
 	}
 
-	private void fixUpInsert(INode<T,V>node){
+	private void fixUpInsert(INode<T,V>node){if(node.getColor()==INode.BLACK)return;
 		if(node==root){node.setColor(INode.BLACK);return;}
 		INode<T, V> father=node.getParent();
 		if(father.getColor()==INode.BLACK){return;}
@@ -112,7 +112,12 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			}
 			else if(level0left&&!level1left){
 				leftRotate(father);
-				fixUpInsert(father);
+				node=father;
+				father=node.getParent();
+				grandfather=father.getParent();
+				uncle=getUncle(node);
+				rightRotate(grandfather);
+				swapColor(grandfather,father);
 				return;
 			}
 			else if(!level1left){
@@ -122,10 +127,207 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			}
 			else{
 				rightRotate(father);
-				fixUpInsert(father);
+				node=father;
+				father=node.getParent();
+				grandfather=father.getParent();
+				uncle=getUncle(node);
+				leftRotate(grandfather);
+				swapColor(grandfather,father);
 				return;
 			}
 
+		}
+	}
+	private void leftRotate(INode<T, V> node) {
+		INode<T, V> right = node.getRightChild();
+		node.setRightChild(right.getLeftChild());
+		if (right.getLeftChild() != null) {
+			right.getLeftChild().setParent(node);
+		}
+		if (node.getParent() != null) {
+			right.setParent(node.getParent());
+			if (node.getParent().getLeftChild() == node) {
+				node.getParent().setLeftChild(right);
+			} else {
+				node.getParent().setRightChild(right);
+			}
+		} else {
+			right.setParent(null);
+			this.root = right;
+		}
+		right.setLeftChild(node);
+		node.setParent(right);
+	}
+	private void rightRotate(INode<T,V> node){
+		if(node==root){
+			INode<T, V> left=node.getLeftChild();
+			root=left;
+			INode<T, V> rightright=left.getRightChild();
+			root.setRightChild(node);
+			node.setLeftChild(rightright);
+			node.setParent(root);
+			root.setParent(null);
+			return;
+		}
+		INode<T, V> left=node.getLeftChild();
+		INode<T, V> parent=node.getParent();
+		if(left.isNull())return;
+		if(parent!=null) {
+			if (parent.getRightChild() == node) {
+				parent.setRightChild(left);
+			} else {
+				parent.setLeftChild(left);
+			}
+		}
+		left.setParent(node.getParent());
+		node.setParent(left);
+		node.setLeftChild(left.getRightChild());
+		left.setRightChild(node);
+
+	}
+
+
+	*/
+	public void insert(T key, V value) {
+		if((key == null) || (value == null)) {
+			throw new RuntimeErrorException(null);
+		}
+		//creating the node
+		INode<T, V> node=new RBNode<T, V>(false);
+		node.setKey(key);
+		node.setValue(value);
+		node.setRightChild(leaf);
+		node.setLeftChild(leaf);
+		node.setColor(INode.RED);
+		insertNode(node);
+	}
+	private void insertNode(INode node) {
+		INode temp = root;
+		if (root == null) {
+			root = node;
+			node.setColor(INode.BLACK);
+			node.setParent(null);
+		} else {
+			node.setColor(INode.RED);
+			while (true) {
+				if (temp.getKey().compareTo(node.getKey())>0) {
+					if (temp.getLeftChild().isNull()) {
+						temp.setLeftChild(node);
+						node.setParent(temp);
+						break;
+					} else {
+						temp = temp.getLeftChild();
+					}
+				} else if (temp.getKey().compareTo(node.getKey())<=0) {
+					if (temp.getRightChild().isNull()) {
+						temp.setRightChild(node);
+						node.setParent(temp);
+						break;
+					} else {
+						temp = temp.getRightChild();
+					}
+				}
+			}
+			fixUpInsert(node);
+		}
+	}
+
+	//Takes as argument the newly inserted node
+	private void fixUpInsert(INode node) {
+		while (node.getParent()!=null&&node.getParent().getColor() == INode.RED) {
+			INode uncle=leaf;
+			if (node.getParent() == node.getParent().getParent().getLeftChild()) {
+				uncle = node.getParent().getRightChild();
+
+				if (uncle != leaf && uncle.getColor() ==INode.RED) {
+					node.getParent().setColor(INode.BLACK);
+					uncle.setColor(INode.BLACK);
+					node.getParent().getParent().setColor(INode.RED);
+					node = node.getParent().getParent();
+					continue;
+				}
+				if (node == node.getParent().getRightChild()) {
+					//Double rotation needed
+					node = node.getParent();
+					leftRotate(node);
+				}
+				node.getParent().setColor(INode.BLACK);
+				node.getParent().getParent().setColor(INode.RED);
+				//if the "else if" code hasn't executed, this
+				//is a case where we only need a single rotation
+				rightRotate(node.getParent().getParent());
+			} else {
+				uncle = node.getParent().getParent().getLeftChild();
+				if (uncle != leaf && uncle.getColor() ==INode.RED) {
+					node.getParent().setColor(INode.BLACK);
+					uncle.setColor(INode.BLACK);
+					node.getParent().getParent().setColor(INode.RED);
+					node = node.getParent().getParent();
+					continue;
+				}
+				if (node == node.getParent().getLeftChild()) {
+					//Double rotation needed
+					node = node.getParent();
+					rightRotate(node);
+				}
+				node.getParent().setColor(INode.BLACK);
+				node.getParent().getParent().setColor(INode.RED);
+				//if the "else if" code hasn't executed, this
+				//is a case where we only need a single rotation
+				leftRotate(node.getParent().getParent());
+			}
+		}
+		root.setColor(INode.BLACK);
+	}
+
+	void leftRotate(INode node) {
+		if (node.getParent() != null) {
+			if (node == node.getParent().getLeftChild()) {
+				node.getParent().setLeftChild(node.getRightChild());
+			} else {
+				node.getParent().setRightChild(node.getRightChild());
+			}
+			node.getRightChild().setParent(node.getParent());
+			node.setParent(node.getRightChild());
+			if (node.getRightChild().getLeftChild().isNull()) {
+				node.getRightChild().getLeftChild().setParent(node);
+			}
+			node.setRightChild(node.getRightChild().getLeftChild());
+			node.getParent().setLeftChild(node);
+		} else {//Need to rotate root
+			INode right = root.getRightChild();
+			root.setRightChild(right.getLeftChild());
+			right.getLeftChild().setParent(root);
+			root.setParent(right);
+			right.setLeftChild(root);
+			right.setParent(null);
+			root = right;
+		}
+	}
+
+	void rightRotate(INode node) {
+		if (node.getParent() != null) {
+			if (node == node.getParent().getLeftChild()) {
+				node.getParent().setLeftChild(node.getLeftChild());
+			} else {
+				node.getParent().setRightChild(node.getLeftChild());
+			}
+
+			node.getLeftChild().setParent(node.getParent());
+			node.setParent(node.getLeftChild());
+			if (!(node.getLeftChild().getRightChild().isNull())) {
+				node.getLeftChild().getRightChild().setParent(node);
+			}
+			node.setLeftChild(node.getLeftChild().getRightChild());
+			node.getParent().setRightChild(node);
+		} else {//Need to rotate root
+			INode left = root.getLeftChild();
+			root.setLeftChild(root.getLeftChild().getRightChild());
+			left.getRightChild().setParent(root) ;
+			root.setParent(left);
+			left.setRightChild(root);
+			left.setParent(null);
+			root = left;
 		}
 	}
 
@@ -263,53 +465,6 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		deleteNode(node);
 	}
 
-	private void leftRotate(INode<T, V> node) {
-		INode<T, V> right = node.getRightChild();
-		node.setRightChild(right.getLeftChild());
-		if (right.getLeftChild() != null) {
-			right.getLeftChild().setParent(node);
-		}
-		if (node.getParent() != null) {
-			right.setParent(node.getParent());
-			if (node.getParent().getLeftChild() == node) {
-				node.getParent().setLeftChild(right);
-			} else {
-				node.getParent().setRightChild(right);
-			}
-		} else {
-			right.setParent(null);
-			this.root = right;
-		}
-		right.setLeftChild(node);
-		node.setParent(right);
-	}
-	private void rightRotate(INode<T,V> node){
-		if(node==root){
-			INode<T, V> left=node.getLeftChild();
-			root=left;
-			INode<T, V> rightright=left.getRightChild();
-			root.setRightChild(node);
-			node.setLeftChild(rightright);
-			node.setParent(root);
-			root.setParent(null);
-			return;
-		}
-		INode<T, V> left=node.getLeftChild();
-		INode<T, V> parent=node.getParent();
-		if(left.isNull())return;
-		if(parent!=null) {
-			if (parent.getRightChild() == node) {
-				parent.setRightChild(left);
-			} else {
-				parent.setLeftChild(left);
-			}
-		}
-		left.setParent(node.getParent());
-		node.setParent(left);
-		node.setLeftChild(left.getRightChild());
-		left.setRightChild(node);
-
-	}
 
 	private INode<T, V> getUncle(INode<T, V> node){
 		if((node != null) && (node.getParent() == null) && (node.getParent().getParent() != null))return null;
