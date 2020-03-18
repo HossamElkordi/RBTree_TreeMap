@@ -6,6 +6,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 
 	private INode<T, V> root;
 	private INode<T, V> leaf = new RBNode<T, V>(true);
+	private boolean isDeleted = false;
 
 	public INode<T, V> getRoot() {
 		return this.root;
@@ -348,54 +349,99 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		if(key == null) {
 			throw new RuntimeErrorException(null);
 		}
-		INode<T, V> deleted = recurDelete(root, key);
-		if((deleted == null) || deleted.isNull()) {
-			return false;
+		isDeleted = false;
+		recurDelete(root, key);
+		if(isDeleted) {
+			if(root.isNull()) {
+				root = null;
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	private INode<T, V> recurDelete(INode<T, V> node, T key) {
-		if((node == null) || (node.isNull())) {
-			return null;
-		}
+		if((node == null) || (node.isNull())) {return null;}
+		
 		if(key.compareTo(node.getKey()) < 0) {
 			node.setLeftChild(recurDelete(node.getLeftChild(), key));
 		}else if(key.compareTo(node.getKey()) > 0) {
 			node.setRightChild(recurDelete(node.getRightChild(), key));
 		}else {
-			if(node.getLeftChild().isNull() && node.getRightChild().isNull()) {
-				fixUpDelete(node, leaf);
-				node = leaf;
-			}else { 
-				INode<T, V> child = null;
-				if(node.getLeftChild().isNull()) {
-					child = node.getRightChild();
-				}else if(node.getRightChild().isNull()) {
-					child = node.getRightChild();
-				}
-				copyNode(child, node);
-				fixUpDelete(node,child);
-				deleteNode(child);
-				child = null;
-				return node;
+			isDeleted = true;
+			if((node.getLeftChild().isNull()) && (node.getRightChild().isNull())) {
+				fixUpDelete(node);
+				deleteNode(node);
+				node = null;
+				return leaf;
 			}
-			if(node != leaf) {
-				INode<T, V> successor = getSuccessor(node.getRightChild());
-				node.setKey(successor.getKey());
-				node.setValue(successor.getValue());
-				recurDelete(node.getRightChild(), successor.getKey());
+			INode<T, V> successor = null;
+			if(node.getLeftChild().isNull()) {				
+				successor = node.getRightChild();
+				successor.setColor(node.getColor());
+				return successor;
+			}else if(node.getRightChild().isNull()) {
+				successor = node.getLeftChild();
+				successor.setColor(node.getColor());
+				return successor;
+			}else {
+				successor = getSuccessor(node.getRightChild());
 			}
+			node.setKey(successor.getKey());
+			node.setValue(successor.getValue());
+			node.setRightChild(recurDelete(node.getRightChild(), node.getKey()));
 		}
+		
 		return node;
-	}
+	}	
 	
-	private void fixUpDelete(INode<T, V> deleted, INode<T, V> child) {
-		if((deleted.getColor() == INode.RED) || (child.getColor() == INode.RED)) {
+	
+//	private INode<T, V> recurDelete(INode<T, V> node, T key) {
+//		if((node == null) || (node.isNull())) {
+//			return null;
+//		}
+//		if(key.compareTo(node.getKey()) < 0) {
+//			node.setLeftChild(recurDelete(node.getLeftChild(), key));
+//		}else if(key.compareTo(node.getKey()) > 0) {
+//			node.setRightChild(recurDelete(node.getRightChild(), key));
+//		}else {
+//			if(node.getLeftChild().isNull() && node.getRightChild().isNull()) {
+//				fixUpDelete(node, leaf);
+//				deleteNode(node);
+//				return leaf;
+//			}else if(!(node.getLeftChild().isNull() && node.getRightChild().isNull())){ 
+//				INode<T, V> child = null;
+//				if(node.getLeftChild().isNull()) {
+//					child = node.getRightChild();
+//				}else {
+//					child = node.getLeftChild();
+//				}
+//				if(child.equals(leaf)) {
+//					node = leaf;
+//				}else {
+//					copyNode(child, node);
+//				}
+//				fixUpDelete(node,child);
+//				deleteNode(child);
+//				child = null;
+//				return node;
+//			}
+//			if(node != leaf) {
+//				INode<T, V> successor = getSuccessor(node.getRightChild());
+//				node.setKey(successor.getKey());
+//				node.setValue(successor.getValue());
+//				recurDelete(node.getRightChild(), successor.getKey());
+//			}
+//		}
+//		return node;
+//	}
+	
+	private void fixUpDelete(INode<T, V> deleted) {
+		if((deleted.getColor() == INode.RED)) {
 			return;
 		}
 		INode<T, V> sibling = null;
-		while((deleted != root) && (deleted.getColor() == INode.BLACK)) {
+		while(!deleted.equals(root) && (deleted.getColor() == INode.BLACK)) {
 			sibling = getSibling(deleted);
 			if(sibling.getColor() == INode.RED) {
 				sibling.setColor(INode.BLACK);
@@ -409,6 +455,14 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			}
 			
 			if((sibling.getLeftChild().getColor() == INode.BLACK) && (sibling.getRightChild().getColor() == INode.BLACK)) {
+				if(sibling.getParent().getLeftChild().equals(sibling) && sibling.getParent().getColor() == INode.RED) {
+					rightRotate(sibling.getParent());
+					break;
+				}
+				if(sibling.getParent().getRightChild().equals(sibling) && sibling.getParent().getColor() == INode.RED) {
+					leftRotate(sibling.getParent());
+					break;
+				}
 				sibling.setColor(INode.RED);
 				deleted = deleted.getParent();
 			}else {
@@ -440,13 +494,6 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	
 	private INode<T, V> getSuccessor(INode<T, V> node){
 		return (!node.getLeftChild().isNull()) ? getSuccessor(node.getLeftChild()) : node;
-	}
-	
-	private void copyNode(INode<T, V> from, INode<T, V> to) {
-		to.setKey(from.getKey());
-		to.setValue(from.getValue());
-		to.setLeftChild(from.getLeftChild());
-		to.setRightChild(from.getRightChild());
 	}
 	
 	private void deleteNode(INode<T, V> node) {

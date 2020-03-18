@@ -2,24 +2,43 @@ package eg.edu.alexu.csd.filestructure.redblacktree;
 
 import org.junit.Assert;
 
+import eg.edu.alexu.csd.filestructure.redblacktree.tester.TestRunner;
+
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 public class MainTest {
 
 	public static void main(String[] args) {
-		IRedBlackTree redBlackTree=new RBTree();
-		Random r = new Random();
-		HashSet<Integer> list = new HashSet();
+		IRedBlackTree<Integer, String> redBlackTree = new RBTree<Integer, String>();
+	      int j = 0;
+	      try {
+	         Random r = new Random();
+	         HashSet<Integer> list = new HashSet<Integer>();
 
-		int i;
-		int key;
-		for(i = 0; i < 100000; ++i) {
-			System.out.println(i);
-			key = r.nextInt(10000);
-			redBlackTree.insert(key, "soso" + key);
-			list.add(key);
-		}
+	         for(int i = 0; i < 10; ++i) {
+	            int key = r.nextInt(100);
+	            list.add(key);
+	            redBlackTree.insert(key, "soso" + key);
+	         }
+
+	         Iterator<Integer> var9 = list.iterator();
+	         
+	         while(var9.hasNext()) {
+	        	 j++;
+	            Integer elem = (Integer)var9.next();
+	            Assert.assertTrue(redBlackTree.delete(elem));
+	         }
+
+	         INode<Integer, String> node = redBlackTree.getRoot();
+	         if (node != null && !node.isNull()) {
+	            Assert.fail();
+	         }
+	      } catch (Throwable var6) {
+	    	  System.out.println(j);
+	         TestRunner.fail("Fail to handle deletion", var6);
+	      }
 
 		/*for(i = 0; i < 100; ++i) {
 			key = r.nextInt(10000);

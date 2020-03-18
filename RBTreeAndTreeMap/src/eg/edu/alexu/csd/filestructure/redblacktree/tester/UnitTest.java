@@ -450,7 +450,7 @@ public class UnitTest {
    @Test
    public void testDeleteAllElementsInTree() {
       IRedBlackTree redBlackTree = (IRedBlackTree)TestRunner.getImplementationInstanceForInterface(IRedBlackTree.class);
-
+      int j = 0;
       try {
          Random r = new Random();
          HashSet<Integer> list = new HashSet();
@@ -462,8 +462,9 @@ public class UnitTest {
          }
 
          Iterator var9 = list.iterator();
-
+         
          while(var9.hasNext()) {
+        	 j++;
             Integer elem = (Integer)var9.next();
             Assert.assertTrue(redBlackTree.delete(elem));
          }
@@ -473,6 +474,7 @@ public class UnitTest {
             Assert.fail();
          }
       } catch (Throwable var6) {
+    	  System.out.println(j);
          TestRunner.fail("Fail to handle deletion", var6);
       }
 
