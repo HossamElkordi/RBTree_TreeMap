@@ -189,8 +189,10 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 
 	*/
 	public void insert(T key, V value) {
+		System.out.println("#0");
 		if((key == null) || (value == null)) {
 			throw new RuntimeErrorException(null);
+
 		}
 		//creating the node
 		INode<T, V> node=new RBNode<T, V>(false);
@@ -199,54 +201,56 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		node.setRightChild(leaf);
 		node.setLeftChild(leaf);
 		node.setColor(INode.RED);
+		System.out.println("#1");
 		insertNode(node);
 	}
-	private void insertNode(INode node) {
+	private void insertNode(INode node) {System.out.println("*0");
 		INode temp = root;
-		if (root == null) {
+		if (root == null) {System.out.println("*1");
 			root = node;
 			node.setColor(INode.BLACK);
 			node.setParent(null);
-		} else {
+		} else {System.out.println("*2");
 			node.setColor(INode.RED);
-			while (true) {
-				if (temp.getKey().compareTo(node.getKey())>0) {
-					if (temp.getLeftChild().isNull()) {
+			while (true) {System.out.println("*3");
+				if (temp.getKey().compareTo(node.getKey())>0) {System.out.println("*4");
+					if (temp.getLeftChild().isNull()) {System.out.println("*5");
 						temp.setLeftChild(node);
 						node.setParent(temp);
 						break;
-					} else {
+					} else {System.out.println("*6");
 						temp = temp.getLeftChild();
 					}
-				} else if (temp.getKey().compareTo(node.getKey())<=0) {
-					if (temp.getRightChild().isNull()) {
+				} else if (temp.getKey().compareTo(node.getKey())<=0) {System.out.println("*7");
+					if (temp.getRightChild().isNull()) {System.out.println("*8");
 						temp.setRightChild(node);
 						node.setParent(temp);
 						break;
-					} else {
+					} else {System.out.println("*9");
 						temp = temp.getRightChild();
 					}
 				}
 			}
+			System.out.println("*10");
 			fixUpInsert(node);
 		}
 	}
 
 	//Takes as argument the newly inserted node
-	private void fixUpInsert(INode node) {
-		while (node.getParent()!=null&&node.getParent().getColor() == INode.RED) {
+	private void fixUpInsert(INode node) {System.out.println("$0");
+		while (node.getParent()!=null&&node.getParent().getColor() == INode.RED) {System.out.println("$1");
 			INode uncle=leaf;
-			if (node.getParent() == node.getParent().getParent().getLeftChild()) {
+			if (node.getParent() == node.getParent().getParent().getLeftChild()) {System.out.println("$2");
 				uncle = node.getParent().getRightChild();
 
-				if (uncle != leaf && uncle.getColor() ==INode.RED) {
+				if (uncle != leaf && uncle.getColor() ==INode.RED) {System.out.println("$3");
 					node.getParent().setColor(INode.BLACK);
 					uncle.setColor(INode.BLACK);
 					node.getParent().getParent().setColor(INode.RED);
 					node = node.getParent().getParent();
 					continue;
 				}
-				if (node == node.getParent().getRightChild()) {
+				if (node == node.getParent().getRightChild()) {System.out.println("$4");
 					//Double rotation needed
 					node = node.getParent();
 					leftRotate(node);
@@ -256,20 +260,22 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 				//if the "else if" code hasn't executed, this
 				//is a case where we only need a single rotation
 				rightRotate(node.getParent().getParent());
-			} else {
+				System.out.println("$5");
+			} else {System.out.println("$6");
 				uncle = node.getParent().getParent().getLeftChild();
-				if (uncle != leaf && uncle.getColor() ==INode.RED) {
+				if (uncle != leaf && uncle.getColor() ==INode.RED) {System.out.println("$7");
 					node.getParent().setColor(INode.BLACK);
 					uncle.setColor(INode.BLACK);
 					node.getParent().getParent().setColor(INode.RED);
 					node = node.getParent().getParent();
 					continue;
 				}
-				if (node == node.getParent().getLeftChild()) {
+				if (node == node.getParent().getLeftChild()) {System.out.println("$8");
 					//Double rotation needed
 					node = node.getParent();
 					rightRotate(node);
 				}
+				System.out.println("$9");
 				node.getParent().setColor(INode.BLACK);
 				node.getParent().getParent().setColor(INode.RED);
 				//if the "else if" code hasn't executed, this
@@ -278,23 +284,26 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			}
 		}
 		root.setColor(INode.BLACK);
+		System.out.println("$10");
 	}
 
-	void leftRotate(INode node) {
-		if (node.getParent() != null) {
-			if (node == node.getParent().getLeftChild()) {
+	void leftRotate(INode node) {System.out.println("@0");
+		if (node.getParent() != null) {System.out.println("@1");
+			if (node == node.getParent().getLeftChild()) {System.out.println("@2");
 				node.getParent().setLeftChild(node.getRightChild());
-			} else {
+			} else {System.out.println("@3");
 				node.getParent().setRightChild(node.getRightChild());
 			}
 			node.getRightChild().setParent(node.getParent());
 			node.setParent(node.getRightChild());
-			if (node.getRightChild().getLeftChild().isNull()) {
+			System.out.println("@4");
+			if (node.getRightChild().getLeftChild().isNull()) {System.out.println("@5");
 				node.getRightChild().getLeftChild().setParent(node);
-			}
+			}System.out.println("@6");
 			node.setRightChild(node.getRightChild().getLeftChild());
 			node.getParent().setLeftChild(node);
 		} else {//Need to rotate root
+			System.out.println("@7");
 			INode right = root.getRightChild();
 			root.setRightChild(right.getLeftChild());
 			right.getLeftChild().setParent(root);
@@ -305,22 +314,24 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}
 	}
 
-	void rightRotate(INode node) {
-		if (node.getParent() != null) {
-			if (node == node.getParent().getLeftChild()) {
+	void rightRotate(INode node) {System.out.println("@8");
+		if (node.getParent() != null) {System.out.println("@9");
+			if (node == node.getParent().getLeftChild()) {System.out.println("@10");
 				node.getParent().setLeftChild(node.getLeftChild());
-			} else {
+			} else {System.out.println("@11");
 				node.getParent().setRightChild(node.getLeftChild());
 			}
 
 			node.getLeftChild().setParent(node.getParent());
 			node.setParent(node.getLeftChild());
-			if (!(node.getLeftChild().getRightChild().isNull())) {
+			if (!(node.getLeftChild().getRightChild().isNull())) {System.out.println("@12");
 				node.getLeftChild().getRightChild().setParent(node);
 			}
 			node.setLeftChild(node.getLeftChild().getRightChild());
 			node.getParent().setRightChild(node);
+			System.out.println("@13");
 		} else {//Need to rotate root
+			System.out.println("@14");
 			INode left = root.getLeftChild();
 			root.setLeftChild(root.getLeftChild().getRightChild());
 			left.getRightChild().setParent(root) ;
