@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class MainTest {
-
+public static final int COUNT=10;
 	public static void main(String[] args) {
 		IRedBlackTree<Integer, String> redBlackTree = new RBTree<Integer, String>();
 	      int j = 0;
@@ -67,5 +67,37 @@ public class MainTest {
 		inOrderTraversal(root.getLeftChild());
 		System.out.println("(" + root.getKey() + ", " + root.getValue() + "): " + ((root.getColor() == INode.RED) ? "RED" : "BLACK"));
 		inOrderTraversal(root.getRightChild());
+	}
+	static void print2DUtil(INode root, int space)
+	{
+		// Base case
+		if (root == null)
+			return;
+
+		// Increase distance between levels
+		space += COUNT;
+
+		// Process right child first
+		print2DUtil(root.getRightChild(), space);
+
+		// Print current node after space
+		// count
+		System.out.print("\n");
+		for (int i = COUNT; i < space; i++)
+			System.out.print(" ");
+		String color;
+		if(root.getColor())color=" R ";
+		else color=" B ";
+		System.out.print(root.getValue() +color+ "\n");
+
+		// Process left child
+		print2DUtil(root.getLeftChild(), space);
+	}
+
+	// Wrapper over print2DUtil()
+	static void print2D(INode root)
+	{
+		// Pass initial space count as 0
+		print2DUtil(root, 0);
 	}
 }
