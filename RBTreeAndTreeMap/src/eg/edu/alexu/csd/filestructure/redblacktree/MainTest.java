@@ -30,7 +30,10 @@ public static final int COUNT=10;
 	         while(var9.hasNext()) {
 	        	 print2D(redBlackTree.getRoot());
 	            Integer elem = (Integer)var9.next();
-	            Assert.assertTrue(redBlackTree.delete(elem));
+				 System.out.println("__________________________________________________________________");
+				 System.out.println(elem);
+				 System.out.println("__________________________________________________________________");
+	           redBlackTree.delete(elem);
 	         }
 
 	         INode<Integer, String> node = redBlackTree.getRoot();
