@@ -12,31 +12,34 @@ public class MainTest {
 public static final int COUNT=10;
 	public static void main(String[] args) {
 		IRedBlackTree<Integer, String> redBlackTree = new RBTree<Integer, String>();
-	      int j = 0;
-	      try {
+		try {
 	         Random r = new Random();
-	         HashSet<Integer> list = new HashSet<Integer>();
+	         HashSet<Integer> list = new HashSet();
 
 	         for(int i = 0; i < 10; ++i) {
 	            int key = r.nextInt(100);
-	            list.add(key);
+	            if (r.nextInt(5) % 4 == 0) {
+	               list.add(key);
+	            }
+
 	            redBlackTree.insert(key, "soso" + key);
 	         }
 
-	         Iterator<Integer> var9 = list.iterator();
-	         
+	         Iterator var9 = list.iterator();
+
 	         while(var9.hasNext()) {
-	        	 j++;
+	        	 print2D(redBlackTree.getRoot());
 	            Integer elem = (Integer)var9.next();
 	            Assert.assertTrue(redBlackTree.delete(elem));
 	         }
 
 	         INode<Integer, String> node = redBlackTree.getRoot();
-	         if (node != null && !node.isNull()) {
+	         if (node == null || node.isNull()) {
 	            Assert.fail();
 	         }
+
+//	         Assert.assertTrue(this.verifyProps(node));
 	      } catch (Throwable var6) {
-	    	  System.out.println(j);
 	         TestRunner.fail("Fail to handle deletion", var6);
 	      }
 
