@@ -52,8 +52,12 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		INode<T, V> node=new RBNode<T, V>(false);
 		node.setKey(key);
 		node.setValue(value);
-		node.setRightChild(new RBNode<T, V>(true));
-		node.setLeftChild(new RBNode<T, V>(true));
+		INode child1=new RBNode<T, V>(true);
+		child1.setParent(node);
+		node.setRightChild(child1);
+		child1=new RBNode<T, V>(true);
+		child1.setParent(node);
+		node.setLeftChild(child1);
 		node.setColor(INode.RED);
 		if(root==null){node.setColor(INode.BLACK);
 			root=node;
