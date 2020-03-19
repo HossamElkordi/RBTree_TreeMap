@@ -350,7 +350,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			throw new RuntimeErrorException(null);
 		}
 		isDeleted = false;
-		recurDelete(root, key);
+		delHelper(key);
 		if(isDeleted) {
 			if(root.isNull()) {
 				root = null;
@@ -358,6 +358,68 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			return true;
 		}
 		return false;
+	}
+	
+	private void delHelper(T key) {
+		INode<T, V> toDelete = null;
+		INode<T, V> i = root;
+		while(!i.isNull()) {
+			if(key.compareTo(i.getKey()) < 0) {
+				i = i.getLeftChild();
+			}else if(key.compareTo(i.getKey()) > 0) {
+				i = i.getRightChild();
+			}else {
+				isDeleted = true;
+				toDelete = i;
+				break;
+			}
+		}
+		if(i.isNull()) {
+			return;
+		}
+		
+		boolean deletedColor = toDelete.getColor();
+		INode<T, V> toFix = null;
+		if(toDelete.getLeftChild().isNull()) {
+			toFix = toDelete.getRightChild();
+			swapNodesParents(toDelete, toDelete.getRightChild());
+		}else if(toDelete.getRightChild().isNull()) {
+			toFix = toDelete.getLeftChild();
+			swapNodesParents(toDelete, toDelete.getLeftChild());
+		}else {
+			INode<T, V> successor = getSuccessor(toDelete.getRightChild());
+			toFix = successor.getRightChild();
+			deletedColor = successor.getColor();
+			if(!successor.equals(toDelete.getRightChild())) {
+				swapNodesParents(successor, successor.getRightChild());
+				successor.setRightChild(toDelete.getRightChild());
+				toDelete.getRightChild().setParent(successor);
+			}else {
+				toFix.setParent(successor);
+			}
+			swapNodesParents(toDelete, successor);
+			successor.setLeftChild(toDelete.getLeftChild());
+			toDelete.getLeftChild().setParent(successor);
+			successor.setColor(toDelete.getColor());
+		}
+		
+		if(deletedColor == INode.BLACK) {
+			fixUpDelete(toFix);
+		}
+		
+	}
+	
+	private void swapNodesParents(INode<T, V> node1, INode<T, V> node2) {
+		if(root.equals(node1)) {
+			root = node2;
+		}else if(node1.getParent().getRightChild().equals(node1)) {
+			node1.getParent().setRightChild(node2);
+		}else {
+			node1.getParent().setLeftChild(node2);
+		}
+		if(!node2.equals(leaf)) {
+			node2.setParent(node1.getParent());
+		}
 	}
 	
 	private INode<T, V> recurDelete(INode<T, V> node, T key) {
@@ -443,6 +505,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		INode<T, V> sibling = null;
 		while(!deleted.equals(root) && (deleted.getColor() == INode.BLACK)) {
 			sibling = getSibling(deleted);
+			if((sibling == null) || sibling.isNull()) return;
 			if(sibling.getColor() == INode.RED) {
 				sibling.setColor(INode.BLACK);
 				deleted.getParent().setColor(INode.RED);
@@ -453,16 +516,16 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 				}
 				sibling = getSibling(deleted);
 			}
-			
+			if((sibling == null) || sibling.isNull()) return;
 			if((sibling.getLeftChild().getColor() == INode.BLACK) && (sibling.getRightChild().getColor() == INode.BLACK)) {
-				if(sibling.getParent().getLeftChild().equals(sibling) && sibling.getParent().getColor() == INode.RED) {
-					rightRotate(sibling.getParent());
-					break;
-				}
-				if(sibling.getParent().getRightChild().equals(sibling) && sibling.getParent().getColor() == INode.RED) {
-					leftRotate(sibling.getParent());
-					break;
-				}
+//				if(sibling.getParent().getLeftChild().equals(sibling) && sibling.getParent().getColor() == INode.RED) {
+//					rightRotate(sibling.getParent());
+//					break;
+//				}
+//				if(sibling.getParent().getRightChild().equals(sibling) && sibling.getParent().getColor() == INode.RED) {
+//					leftRotate(sibling.getParent());
+//					break;
+//				}
 				sibling.setColor(INode.RED);
 				deleted = deleted.getParent();
 			}else {
@@ -533,9 +596,9 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	private INode<T, V> getSibling(INode<T, V> node){
-		if(node != null) {
+		if((node != null) && !node.equals(leaf)) {
 			if(node.getParent() != null) {
-				if (node.getParent().getLeftChild() == node) {
+				if (node.getParent().getLeftChild().equals(node)) {
 					return node.getParent().getRightChild();
 				} else {
 					return node.getParent().getLeftChild();
