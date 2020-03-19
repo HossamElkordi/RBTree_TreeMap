@@ -5,7 +5,6 @@ import javax.management.RuntimeErrorException;
 public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 
 	private INode<T, V> root;
-	private INode<T, V> leaf = new RBNode<T, V>(true);
 	private boolean isDeleted = false;
 
 	public INode<T, V> getRoot() {
@@ -13,7 +12,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	public boolean isEmpty() {
-		return ((root == null) || (this.root == leaf));
+		return ((root == null) || (this.root.isNull()));
 	}
 
 	public void clear() {
@@ -53,8 +52,8 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		INode<T, V> node=new RBNode<T, V>(false);
 		node.setKey(key);
 		node.setValue(value);
-		node.setRightChild(leaf);
-		node.setLeftChild(leaf);
+		node.setRightChild(new RBNode<T, V>(true));
+		node.setLeftChild(new RBNode<T, V>(true));
 		node.setColor(INode.RED);
 		if(root==null){node.setColor(INode.BLACK);
 			root=node;
@@ -428,7 +427,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}else {
 			node1.getParent().setLeftChild(node2);
 		}
-		if(!node2.equals(leaf)) {
+		if(!node2.isNull()) {
 			node2.setParent(node1.getParent());
 		}
 	}
@@ -577,9 +576,9 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 				sibling.setColor(INode.BLACK);
 				deleted.getParent().setColor(INode.RED);
 				if(deleted.getParent().getLeftChild().equals(deleted)) {
-					if(deleted.equals(leaf)) leftRotate(sibling.getParent()); else leftRotate(deleted.getParent());
+					if(deleted.isNull()) leftRotate(sibling.getParent()); else leftRotate(deleted.getParent());
 				}else {
-					if(deleted.equals(leaf)) rightRotate(sibling.getParent()); else rightRotate(deleted.getParent());
+					if(deleted.isNull()) rightRotate(sibling.getParent()); else rightRotate(deleted.getParent());
 				}
 				sibling = getSibling(deleted);
 			}
@@ -664,7 +663,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	}
 
 	private INode<T, V> getSibling(INode<T, V> node){
-		if((node != null) && !node.equals(leaf)) {
+		if((node != null) && !node.isNull()) {
 			if(node.getParent() != null) {
 				if (node.getParent().getLeftChild().equals(node)) {
 					return node.getParent().getRightChild();
