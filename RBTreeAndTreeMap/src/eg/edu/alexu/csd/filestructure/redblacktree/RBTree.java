@@ -142,6 +142,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		}
 	}
 	private void leftRotate(INode<T, V> node) {
+		if(node == null) return;
 		INode<T, V> right = node.getRightChild();
 		node.setRightChild(right.getLeftChild());
 		if ((right.getLeftChild() != null) && !right.getLeftChild().isNull()) {
@@ -162,6 +163,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		node.setParent(right);
 	}
 	private void rightRotate(INode<T,V> node){
+		if(node == null) return;
 		INode<T, V> left=node.getLeftChild();
 		if(left==null||(left.isNull()))return;
 		if(node==root){
@@ -439,15 +441,23 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 				sibling.setColor(INode.BLACK);
 				parent.setColor(INode.RED);
 				if(sibling.equals(parent.getRightChild())) {
-					leftRotate(node.getParent());
+					leftRotate(parent);
 				}else {
-					rightRotate(node.getParent());
+					rightRotate(parent);
 				}
 				sibling = getSibling(node, parent);
 			}
-			if((sibling.getLeftChild().getColor() == INode.BLACK) && (sibling.getRightChild().getColor() == INode.BLACK)) {
-				sibling.setColor(INode.RED);
-				node = sibling.getParent();
+			if(node.equals(root) || sibling == null) break;
+			if(sibling.isNull() || ((sibling.getLeftChild().getColor() == INode.BLACK) && (sibling.getRightChild().getColor() == INode.BLACK))) {
+				if(!sibling.isNull()) {
+					sibling.setColor(INode.RED);
+					node = sibling.getParent();
+				}else {
+					node = parent;
+				}
+				
+//				sibling.setColor(INode.RED);
+//				node = sibling.getParent();
 				parent = node.getParent();
 				sibling = getSibling(node, parent);
 			}else {
