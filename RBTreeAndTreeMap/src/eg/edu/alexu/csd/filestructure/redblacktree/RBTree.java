@@ -395,10 +395,16 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 			toFix = toDelete.getRightChild();
 			firstSibling = getSibling(toDelete, toDelete.getParent());
 			swapNodesParents(toDelete, toDelete.getRightChild());
+			if(toDelete.equals(root)) {
+				root = toFix;
+			}
 		}else if(toDelete.getRightChild().isNull()) {
 			toFix = toDelete.getLeftChild();
 			firstSibling = getSibling(toDelete, toDelete.getParent());
 			swapNodesParents(toDelete, toDelete.getLeftChild());
+			if(toDelete.equals(root)) {
+				root = toFix;
+			}
 		}else {
 			INode<T, V> successor = getSuccessor(toDelete.getRightChild());
 			toFix = successor.getRightChild();
@@ -412,6 +418,9 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 				toFix.setParent(successor);
 			}
 			swapNodesParents(toDelete, successor);
+			if(toDelete.equals(root)) {
+				root = successor;
+			}
 			successor.setLeftChild(toDelete.getLeftChild());
 			toDelete.getLeftChild().setParent(successor);
 			successor.setColor(toDelete.getColor());
