@@ -282,14 +282,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 	private void inOrderFilling(INode<T, V> root, Set<Map.Entry<T, V>> fillSet) {
 		if(root.isNull()) return;
 		inOrderFilling(root.getLeftChild(), fillSet);
-		fillSet.add(new Pair<T, V>(root.getKey(), root.getValue()));
+		fillSet.add(new Entry<T, V>(root.getKey(), root.getValue()));
 		inOrderFilling(root.getRightChild(), fillSet);
 	}
 	
 	private void getLessThan(INode<T, V> node, ArrayList<Map.Entry<T, V>> fill) {
 		if(node.isNull()) return;
 		getLessThan(node.getLeftChild(), fill);
-		fill.add(new Pair<T, V>(node.getKey(), node.getValue()));
+		fill.add(new Entry<T, V>(node.getKey(), node.getValue()));
 		getLessThan(node.getRightChild(), fill);
 	}
 	
