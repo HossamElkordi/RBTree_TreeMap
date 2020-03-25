@@ -282,52 +282,53 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 	
 	private void delFix(INode<T, V> node) {
 		if((root == node) || root.equals(node)) return;
-		INode<T, V> sibling = this.getSibling(node, node.getParent());
+		INode<T, V> parent = node.getParent();
+		INode<T, V> sibling = this.getSibling(node, parent);
 		if(sibling == null) return;
 		if(sibling.isNull()) {
-			delFix(node.getParent());
+			delFix(parent);
 			return;
 		}
 		if(sibling.getColor() == INode.RED) {
 			sibling.setColor(INode.BLACK);
-			sibling.getParent().setColor(INode.RED);
-			if(sibling.equals(sibling.getParent().getLeftChild())) {
-				rightRotate(sibling.getParent());
+			parent.setColor(INode.RED);
+			if(sibling.equals(parent.getLeftChild())) {
+				rightRotate(parent);
 			}else {
-				leftRotate(sibling.getParent());
+				leftRotate(parent);
 			}
 			delFix(node);
 		}else {
 			if((sibling.getLeftChild().getColor() == INode.BLACK) && (sibling.getRightChild().getColor() == INode.BLACK)) {
 				sibling.setColor(INode.RED);
-				if(sibling.getParent().getColor() == INode.BLACK) {
-					delFix(sibling.getParent());
+				if(parent.getColor() == INode.BLACK) {
+					delFix(parent);
 				}else {
-					sibling.getParent().setColor(INode.BLACK);
+					parent.setColor(INode.BLACK);
 				}
 			}else {
 				if(sibling.getLeftChild().getColor() == INode.RED) {
-					if(sibling.equals(sibling.getParent().getLeftChild())) {
+					if(sibling.equals(parent.getLeftChild())) {
 						sibling.getLeftChild().setColor(sibling.getColor());
-						sibling.setColor(sibling.getParent().getColor());
-						rightRotate(sibling.getParent());
+						sibling.setColor(parent.getColor());
+						rightRotate(parent);
 					}else {
-						sibling.getLeftChild().setColor(sibling.getParent().getColor()); 
+						sibling.getLeftChild().setColor(parent.getColor()); 
 			            rightRotate(sibling); 
-			            leftRotate(sibling.getParent());
+			            leftRotate(parent);
 					}
 				}else {
-					if(sibling.equals(sibling.getParent().getLeftChild())) {
-						sibling.getRightChild().setColor(sibling.getParent().getColor()); 
+					if(sibling.equals(parent.getLeftChild())) {
+						sibling.getRightChild().setColor(parent.getColor()); 
 			            leftRotate(sibling); 
-			            rightRotate(sibling.getParent());
+			            rightRotate(parent);
 					}else {
 						sibling.getRightChild().setColor(sibling.getColor());
-						sibling.setColor(sibling.getParent().getColor());
-						leftRotate(sibling.getParent());
+						sibling.setColor(parent.getColor());
+						leftRotate(parent);
 					}
 				}
-				if(sibling.getParent() != null) sibling.getParent().setColor(INode.BLACK);
+				if(parent != null) parent.setColor(INode.BLACK);
 			}
 		}
 	}
