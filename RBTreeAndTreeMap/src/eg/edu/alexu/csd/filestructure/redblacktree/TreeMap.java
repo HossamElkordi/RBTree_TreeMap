@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.management.RuntimeErrorException;
@@ -15,16 +14,16 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 	private IRedBlackTree<T, V> rbTree = new RBTree<T, V>();
 	private int size = 0;
 
-	public Entry<T, V> ceilingEntry(T key) {
+	public Map.Entry<T, V> ceilingEntry(T key) {
 		if(key == null) throw new RuntimeErrorException(null);
 		if(rbTree != null) {
 			INode<T, V> node = findNode(key);
 			if(!node.isNull()) {
 				if(!node.getRightChild().isNull()) {
 					INode<T, V> ceil = getLeast(node.getRightChild());
-					return new Pair<T, V>(ceil.getKey(), ceil.getValue());
+					return new Entry<T, V>(ceil.getKey(), ceil.getValue());
 				}
-				return new Pair<T, V>(node.getKey(), node.getValue());
+				return new Entry<T, V>(node.getKey(), node.getValue());
 			}
 		}
 		return null;
@@ -65,19 +64,19 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		return false;
 	}
 
-	public Set<Entry<T, V>> entrySet() {
+	public Set<Map.Entry<T, V>> entrySet() {
 		if((rbTree != null) && (rbTree.getRoot() != null)) {
-			Set<Entry<T, V>> set = new HashSet<Entry<T, V>>();
+			Set<Map.Entry<T, V>> set = new HashSet<Map.Entry<T, V>>();
 			inOrderFilling(this.rbTree.getRoot(), set);
 			return set;
 		}
 		return null;
 	}
 
-	public Entry<T, V> firstEntry() {
+	public Map.Entry<T, V> firstEntry() {
 		if((rbTree != null) && (rbTree.getClass() != null)) {
 			INode<T, V> least = getLeast(rbTree.getRoot());
-			return new Pair<T, V>(least.getKey(), least.getValue());
+			return new Entry<T, V>(least.getKey(), least.getValue());
 		}
 		return null;
 	}
@@ -90,16 +89,16 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		return null;
 	}
 
-	public Entry<T, V> floorEntry(T key) {
+	public Map.Entry<T, V> floorEntry(T key) {
 		if(key == null) throw new RuntimeErrorException(null);
 		if(rbTree != null) {
 			INode<T, V> node = findNode(key);
 			if(!node.isNull()) {
 				if(!node.getLeftChild().isNull()) {
 					INode<T, V> floor = getLargest(node.getLeftChild());
-					return new Pair<T, V>(floor.getKey(), floor.getValue());
+					return new Entry<T, V>(floor.getKey(), floor.getValue());
 				}
-				return new Pair<T, V>(node.getKey(), node.getValue());
+				return new Entry<T, V>(node.getKey(), node.getValue());
 			}
 		}
 		return null;
@@ -128,10 +127,10 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		return null;
 	}
 
-	public ArrayList<Entry<T, V>> headMap(T toKey) {
+	public ArrayList<Map.Entry<T, V>> headMap(T toKey) {
 		if(toKey == null) throw new RuntimeErrorException(null);
 		if((rbTree != null) && (rbTree.getRoot() != null)) {
-			ArrayList<Entry<T, V>> fill = new ArrayList<Entry<T, V>>();
+			ArrayList<Map.Entry<T, V>> fill = new ArrayList<Map.Entry<T, V>>();
 			INode<T, V> node = findNode(toKey);
 			if(!node.isNull()) {
 				getLessThan(node.getLeftChild(), fill);
@@ -141,14 +140,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		return null;
 	}
 
-	public ArrayList<Entry<T, V>> headMap(T toKey, boolean inclusive) {
+	public ArrayList<Map.Entry<T, V>> headMap(T toKey, boolean inclusive) {
 		if(toKey == null) throw new RuntimeErrorException(null);
 		if((rbTree != null) && (rbTree.getRoot() != null)) {
-			ArrayList<Entry<T, V>> fill = new ArrayList<Entry<T, V>>();
+			ArrayList<Map.Entry<T, V>> fill = new ArrayList<Map.Entry<T, V>>();
 			INode<T, V> node = findNode(toKey);
 			if(!node.isNull()) {
 				getLessThan(node.getLeftChild(), fill);
-				fill.add(new Pair<T, V>(node.getKey(), node.getValue()));
+				fill.add(new Entry<T, V>(node.getKey(), node.getValue()));
 			}
 			return fill;
 		}
@@ -167,7 +166,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 	public Entry<T, V> lastEntry() {
 		if((rbTree != null) && (rbTree.getRoot() != null)) {
 			INode<T, V> greatest = getLargest(rbTree.getRoot());
-			return new Pair<T, V>(greatest.getKey(), greatest.getValue());
+			return new Entry<T, V>(greatest.getKey(), greatest.getValue());
 		}
 		return null;
 	}
@@ -180,20 +179,20 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		return null;
 	}
 
-	public Entry<T, V> pollFirstEntry() {
+	public Map.Entry<T, V> pollFirstEntry() {
 		if((rbTree != null) && (rbTree.getRoot() != null)) {
 			INode<T, V> least = getLeast(rbTree.getRoot());
 			rbTree.delete(least.getKey());
-			return new Pair<T, V>(least.getKey(), least.getValue());
+			return new Entry<T, V>(least.getKey(), least.getValue());
 		}
 		return null;
 	}
 
-	public Entry<T, V> pollLastEntry() {
+	public Map.Entry<T, V> pollLastEntry() {
 		if((rbTree != null) && (rbTree.getRoot() != null)) {
 			INode<T, V> greatest = getLargest(rbTree.getRoot());
 			rbTree.delete(greatest.getKey());
-			return new Pair<T, V>(greatest.getKey(), greatest.getValue());
+			return new Entry<T, V>(greatest.getKey(), greatest.getValue());
 		}
 		return null;
 	}
@@ -211,8 +210,8 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		if(rbTree == null) {
 			rbTree = new RBTree<T, V>();
 		}
-		Set<Entry<T, V>> mappings = map.entrySet();
-		Iterator<Entry<T, V>> iter = mappings.iterator();
+		Set<Map.Entry<T, V>> mappings = map.entrySet();
+		Iterator<Map.Entry<T, V>> iter = mappings.iterator();
 		while(iter.hasNext()) {
 			Map.Entry<T, V> next = iter.next();
 			put(next.getKey(), next.getValue());
@@ -280,14 +279,14 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		inOrderKeys(root.getRightChild(), fillSet);
 	}
 	
-	private void inOrderFilling(INode<T, V> root, Set<Entry<T, V>> fillSet) {
+	private void inOrderFilling(INode<T, V> root, Set<Map.Entry<T, V>> fillSet) {
 		if(root.isNull()) return;
 		inOrderFilling(root.getLeftChild(), fillSet);
 		fillSet.add(new Pair<T, V>(root.getKey(), root.getValue()));
 		inOrderFilling(root.getRightChild(), fillSet);
 	}
 	
-	private void getLessThan(INode<T, V> node, ArrayList<Entry<T, V>> fill) {
+	private void getLessThan(INode<T, V> node, ArrayList<Map.Entry<T, V>> fill) {
 		if(node.isNull()) return;
 		getLessThan(node.getLeftChild(), fill);
 		fill.add(new Pair<T, V>(node.getKey(), node.getValue()));
@@ -302,6 +301,32 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 	private INode<T, V> getLargest(INode<T, V> root) {
 		if(root.getRightChild().isNull()) return root;
 		return getLeast(root.getRightChild());
+	}
+	
+	private static class Entry<K, V> implements Map.Entry<K, V>{
+
+		private K key = null;
+		private V value = null;
+			
+		public Entry(K key, V value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public K getKey() {
+			return this.key;
+		}
+
+		public V getValue() {
+			return this.value;
+		}
+
+		public V setValue(V value) {
+			V old = this.value;
+			this.value = value;
+			return old;
+		}
+		
 	}
 
 }
