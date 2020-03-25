@@ -1,71 +1,21 @@
 package eg.edu.alexu.csd.filestructure.redblacktree;
 
-import org.junit.Assert;
-
-import eg.edu.alexu.csd.filestructure.redblacktree.tester.TestRunner;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
 
 public class MainTest {
-public static final int COUNT=10;
+	
+	private static final int COUNT = 0;
+
 	public static void main(String[] args) {
-		IRedBlackTree<Integer, String> redBlackTree = new RBTree<Integer, String>();
-		try {
-	         Random r = new Random();
-	         HashSet<Integer> list = new HashSet();
-
-	         for(int i = 0; i < 10; ++i) {
-	            int key = r.nextInt(100);
-	            if (r.nextInt(5) % 4 == 0) {
-	               list.add(key);
-	            }
-
-	            redBlackTree.insert(key, "soso" + key);
-	         }
-
-	         Iterator var9 = list.iterator();
-
-	         while(var9.hasNext()) {
-	        	 print2D(redBlackTree.getRoot());
-	            Integer elem = (Integer)var9.next();
-				 System.out.println("__________________________________________________________________");
-				 System.out.println(elem);
-				 System.out.println("__________________________________________________________________");
-	           redBlackTree.delete(elem);
-	         }
-
-	         INode<Integer, String> node = redBlackTree.getRoot();
-	         if (node == null || node.isNull()) {
-	            Assert.fail();
-	         }
-
-//	         Assert.assertTrue(this.verifyProps(node));
-	      } catch (Throwable var6) {
-	         TestRunner.fail("Fail to handle deletion", var6);
-	      }
-
-		/*for(i = 0; i < 100; ++i) {
-			key = r.nextInt(10000);
-			if (!list.contains(key)) {
-				Assert.assertFalse(redBlackTree.delete(key));
-			}
-		}
-		IRedBlackTree<Integer, Integer> rbTree = new RBTree<Integer, Integer>();
-		rbTree.insert(3, 3);
-		rbTree.insert(6, 6);
-		rbTree.insert(15, 15);
-		rbTree.insert(7, 7);
-		rbTree.insert(10, 10);
-		rbTree.insert(12, 12);
-		rbTree.insert(13, 13);
-		rbTree.insert(16, 16);
-		rbTree.insert(17, 17);
-		rbTree.insert(20, 20);
-		rbTree.insert(18, 18);
-		rbTree.insert(23, 23);
-		inOrderTraversal(rbTree.getRoot());*/
+		IRedBlackTree<Integer, Integer> tree = new RBTree<Integer, Integer>();
+		tree.insert(30,  30);
+		tree.insert(20,  20);
+		tree.insert(40,  40);
+		tree.insert(50,  50);
+//		inOrderTraversal(tree.getRoot());
+		System.out.println();
+		tree.delete(30);
+		System.out.println(tree.getRoot().getKey());
+//		inOrderTraversal(tree.getRoot());
 	}
 
 	private static void inOrderTraversal(INode<Integer, Integer> root) {

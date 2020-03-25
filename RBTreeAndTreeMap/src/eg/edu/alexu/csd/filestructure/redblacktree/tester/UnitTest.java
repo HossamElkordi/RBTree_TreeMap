@@ -493,25 +493,42 @@ public class UnitTest {
 
             redBlackTree.insert(key, "soso" + key);
          }
+         Assert.assertTrue(this.verifyProps(redBlackTree.getRoot()));
+         
+         System.out.println("(" + redBlackTree.getRoot().getKey() + ", " + redBlackTree.getRoot().getValue() + "): " + ((redBlackTree.getRoot().getColor() == INode.RED) ? "RED" : "BLACK"));
 
          Iterator var9 = list.iterator();
-
+         boolean root = false;
          while(var9.hasNext()) {
             Integer elem = (Integer)var9.next();
+            if(elem.equals(redBlackTree.getRoot().getKey())) {
+            	root = true;
+            }else {
+            	root = false;
+            }
             Assert.assertTrue(redBlackTree.delete(elem));
+            if(root) System.out.println("NewRoot: (" + redBlackTree.getRoot().getKey() + ", " + redBlackTree.getRoot().getValue() + "): " + ((redBlackTree.getRoot().getColor() == INode.RED) ? "RED" : "BLACK"));
          }
 
          INode<Integer, String> node = redBlackTree.getRoot();
          if (node == null || node.isNull()) {
             Assert.fail();
          }
-
+         System.out.println("(" + redBlackTree.getRoot().getKey() + ", " + redBlackTree.getRoot().getValue() + "): " + ((redBlackTree.getRoot().getColor() == INode.RED) ? "RED" : "BLACK"));
+         System.out.println();
+         inOrderTraversal(redBlackTree.getRoot());
          Assert.assertTrue(this.verifyProps(node));
       } catch (Throwable var6) {
          TestRunner.fail("Fail to handle deletion", var6);
       }
 
    }
+   private void inOrderTraversal(INode<Integer, Integer> root) {
+		if(root.isNull()) return;
+		inOrderTraversal(root.getLeftChild());
+		System.out.println("(" + root.getKey() + ", " + root.getValue() + "): " + ((root.getColor() == INode.RED) ? "RED" : "BLACK"));
+		inOrderTraversal(root.getRightChild());
+	}
 
    @Test
    public void testDeleteWhileInsertingInTree() {
