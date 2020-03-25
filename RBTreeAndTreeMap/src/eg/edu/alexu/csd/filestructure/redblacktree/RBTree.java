@@ -202,7 +202,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		isDeleted = false;
 		helpDelete(key);
 		if(isDeleted) {
-			if(root.isNull()) {
+			if(root == null || root.isNull()) {
 				root = null;
 			}
 			return true;
