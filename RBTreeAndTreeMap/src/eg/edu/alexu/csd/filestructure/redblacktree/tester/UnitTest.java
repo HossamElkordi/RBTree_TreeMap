@@ -1341,7 +1341,7 @@ public class UnitTest {
             t.put(key, "soso" + key);
             treemap.put(key, "soso" + key);
          }
-
+         
          Assert.assertEquals(t.lastEntry(), treemap.lastEntry());
       } catch (Throwable var6) {
          TestRunner.fail("Fail in lastEntry", var6);

@@ -19,11 +19,13 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		if(rbTree != null) {
 			INode<T, V> node = findNode(key);
 			if(!node.isNull()) {
-				if(!node.getRightChild().isNull()) {
-					INode<T, V> ceil = getLeast(node.getRightChild());
-					return new Entry<T, V>(ceil.getKey(), ceil.getValue());
-				}
 				return new Entry<T, V>(node.getKey(), node.getValue());
+			}else {
+				if(node == node.getParent().getLeftChild()) {
+					return new Entry<T, V>(node.getParent().getKey(), node.getParent().getValue());
+				}
+				INode<T, V> successor = getSuccessor(node);
+				return new Entry<T, V>(successor.getKey(), successor.getValue());
 			}
 		}
 		return null;
@@ -34,11 +36,13 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		if(rbTree != null) {
 			INode<T, V> node = findNode(key);
 			if(!node.isNull()) {
-				if(!node.getRightChild().isNull()) {
-					INode<T, V> ceil = getLeast(node.getRightChild());
-					return ceil.getKey();
-				}
 				return node.getKey();
+			}else {
+				if(node == node.getParent().getLeftChild()) {
+					return node.getParent().getKey();
+				}
+				INode<T, V> successor = getSuccessor(node);
+				return successor.getKey();
 			}
 		}
 		return null;
@@ -94,11 +98,13 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		if(rbTree != null) {
 			INode<T, V> node = findNode(key);
 			if(!node.isNull()) {
-				if(!node.getLeftChild().isNull()) {
-					INode<T, V> floor = getLargest(node.getLeftChild());
-					return new Entry<T, V>(floor.getKey(), floor.getValue());
-				}
 				return new Entry<T, V>(node.getKey(), node.getValue());
+			}else {
+				if(node == node.getParent().getRightChild()) {
+					return new Entry<T, V>(node.getParent().getKey(), node.getParent().getValue());
+				}
+				INode<T, V> predeccessor = getPredeccessor(node);
+				return new Entry<T, V>(predeccessor.getKey(), predeccessor.getValue());
 			}
 		}
 		return null;
@@ -109,11 +115,13 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		if(rbTree != null) {
 			INode<T, V> node = findNode(key);
 			if(!node.isNull()) {
-				if(!node.getLeftChild().isNull()) {
-					INode<T, V> floor = getLargest(node.getLeftChild());
-					return floor.getKey();
-				}
 				return node.getKey();
+			}else {
+				if(node == node.getParent().getRightChild()) {
+					return node.getParent().getKey();
+				}
+				INode<T, V> predeccessor = getPredeccessor(node);
+				return predeccessor.getKey();
 			}
 		}
 		return null;
@@ -147,7 +155,7 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 			INode<T, V> node = findNode(toKey);
 			if(!node.isNull()) {
 				getLessThan(node.getLeftChild(), fill);
-				fill.add(new Entry<T, V>(node.getKey(), node.getValue()));
+				if(inclusive) fill.add(new Entry<T, V>(node.getKey(), node.getValue()));
 			}
 			return fill;
 		}
@@ -293,9 +301,29 @@ public class TreeMap<T extends Comparable<T>, V> implements ITreeMap<T, V> {
 		getLessThan(node.getRightChild(), fill);
 	}
 	
+	private INode<T, V> getSuccessor(INode<T, V> node) {
+		if(!node.getRightChild().isNull()) return getLeast(node.getRightChild());
+		INode<T, V> parent = node.getParent();
+		while((parent != null) && node.equals(parent.getRightChild())) {
+			node = parent;
+			parent = parent.getParent();
+		}
+		return parent;
+	}
+	
 	private INode<T, V> getLeast(INode<T, V> root){
 		if(root.getLeftChild().isNull()) return root;
 		return getLeast(root.getLeftChild());
+	}
+	
+	private INode<T, V> getPredeccessor(INode<T, V> node) {
+		if(!node.getLeftChild().isNull()) return getLargest(node.getLeftChild());
+		INode<T, V> parent = node.getParent();
+		while ((parent != null) && node.equals(parent.getLeftChild())) {
+			node = parent;
+			parent = parent.getParent();
+		}
+		return parent;
 	}
 	
 	private INode<T, V> getLargest(INode<T, V> root) {
