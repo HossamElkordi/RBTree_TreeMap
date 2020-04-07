@@ -1,21 +1,24 @@
 package eg.edu.alexu.csd.filestructure.redblacktree;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+
+import org.junit.Assert;
+
+import eg.edu.alexu.csd.filestructure.redblacktree.tester.TestRunner;
 
 public class MainTest {
 	
 	private static final int COUNT = 0;
 
 	public static void main(String[] args) {
-		IRedBlackTree<Integer, Integer> tree = new RBTree<Integer, Integer>();
-		tree.insert(30,  30);
-		tree.insert(20,  20);
-		tree.insert(40,  40);
-		tree.insert(50,  50);
-//		inOrderTraversal(tree.getRoot());
-		System.out.println();
-		tree.delete(30);
-		System.out.println(tree.getRoot().getKey());
-//		inOrderTraversal(tree.getRoot());
+
 	}
 
 	private static void inOrderTraversal(INode<Integer, Integer> root) {
