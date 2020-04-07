@@ -59,7 +59,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		child1.setParent(node);
 		node.setLeftChild(child1);
 		node.setColor(INode.RED);
-		if(root==null){node.setColor(INode.BLACK);
+		if(root==null || root.isNull()){node.setColor(INode.BLACK);
 			root=node;
 			return;
 		}
@@ -202,9 +202,6 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		isDeleted = false;
 		helpDelete(key);
 		if(isDeleted) {
-			if(root == null || root.isNull()) {
-				root = null;
-			}
 			return true;
 		}
 		return false;
@@ -233,7 +230,7 @@ public class RBTree<T extends Comparable<T>, V> implements IRedBlackTree<T, V> {
 		boolean doubleBlack = ((replacement.getColor() == INode.BLACK) && (toDelete.getColor() == INode.BLACK));
 		if(replacement.isNull()) {
 			if(toDelete.equals(root) || toDelete == root) {
-				root = null;
+				root = replacement;
 			}else {
 				if(doubleBlack) {
 					delFix(toDelete);
